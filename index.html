@@ -1640,7 +1640,7 @@ async function invokeHandshake() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         model: "claude-sonnet-4-6",
-        max_tokens: 280,
+        max_tokens: 600,
         system: buildSystemPrompt(),
         messages: [{ role: "user", content: buildUserPrompt(transits, phi, jd, seed) }]
       })
