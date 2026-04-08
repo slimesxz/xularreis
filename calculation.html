@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calculation — Xularreis</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+CiAgPHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiBmaWxsPSIjMDAwMDAwIi8+CiAgPHRleHQgeD0iMTYiIHk9IjI0IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIgogICAgICAgIGZvbnQtZmFtaWx5PSJHZW9yZ2lhLCBzZXJpZiIgZm9udC1zdHlsZT0iaXRhbGljIgogICAgICAgIGZvbnQtc2l6ZT0iMjQiIGZvbnQtd2VpZ2h0PSI0MDAiCiAgICAgICAgZmlsbD0iIzQ4ZDBmMiI+zqY8L3RleHQ+Cjwvc3ZnPg==">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600&family=Cormorant+Infant:ital,wght@0,300;0,400;1,300;1,400;1,500&family=Philosopher:ital,wght@0,400;1,400;1,700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root {
+  --bg: #000000;
+  --acid: #48d0f2;
+  --amber: #3088b0;
+  --lavender: #a0b0bc;
+  --acid-dim: rgba(72,208,242,0.12);
+  --amber-dim: rgba(48,136,176,0.1);
+  --lav-dim: rgba(160,176,188,0.1);
+  --acid-glow: 0 0 18px rgba(72,208,242,0.4), 0 0 40px rgba(72,208,242,0.14);
+  --amber-glow: 0 0 14px rgba(48,136,176,0.4);
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--lavender);font-family:'Cormorant Infant',serif;font-style:italic;overflow-x:hidden;cursor:none}
+body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.04) 2px,rgba(0,0,0,.04) 4px);pointer-events:none;z-index:9000}
+
+#cd{position:fixed;width:5px;height:5px;background:var(--acid);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);box-shadow:var(--acid-glow)}
+#cr{position:fixed;width:28px;height:28px;border:1px solid var(--acid);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);opacity:.4}
+
+/* grain removed */
+
+/* ── BIO STRIPS ─────────────────────────────────────────── */
+#bio-strip{position:fixed;left:0;top:0;bottom:0;width:44px;z-index:100;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0;border-right:1px solid rgba(72,208,242,0.3);background:linear-gradient(to right,rgba(0,0,0,1) 60%,transparent)}
+#bio-strip .strip-label{writing-mode:vertical-lr;transform:rotate(180deg);font-family:'Share Tech Mono',monospace;font-size:8px;letter-spacing:.18em;color:var(--acid);opacity:.45;padding:8px 0;white-space:nowrap;text-decoration:none;cursor:none;transition:opacity .3s}
+#bio-strip .strip-label:hover{opacity:.85}
+#bio-strip-r{position:fixed;right:0;top:0;bottom:0;width:44px;z-index:100;display:flex;flex-direction:column;align-items:center;justify-content:center;border-left:1px solid rgba(72,208,242,0.3);background:linear-gradient(to left,rgba(0,0,0,1) 60%,transparent)}
+
+/* ── HEADER ─────────────────────────────────────────────── */
+header{position:fixed;top:0;left:44px;right:44px;height:52px;z-index:200;display:flex;align-items:center;justify-content:space-between;padding:0 32px;border-bottom:1px solid transparent;background:rgba(0,0,0,1)}
+.wordmark{font-family:'Cinzel',serif;font-size:13px;letter-spacing:.35em;color:var(--lavender);opacity:.91;text-transform:uppercase;text-decoration:none;cursor:none;transition:opacity .3s}
+.wordmark:hover{opacity:1}
+.hnav{display:flex;gap:28px;align-items:center}
+.hnav-link{font-family:'Cinzel',serif;font-size:11px;letter-spacing:.4em;color:var(--lavender);opacity:.35;text-decoration:none;cursor:none;transition:opacity .3s,color .3s}
+.hnav-link:hover{opacity:.85}
+.hnav-link.active{opacity:1;color:var(--acid)}
+
+/* ── MAIN ───────────────────────────────────────────────── */
+main{position:relative;z-index:10;padding-top:52px;padding-left:44px;padding-right:44px}
+
+/* ── HERO ───────────────────────────────────────────────── */
+.c-hero{padding:100px 40px 50px;text-align:center}
+.c-hero h1{font-family:'Philosopher',serif;font-style:italic;font-weight:700;font-size:clamp(3.27rem,7.5vw,5.73rem);color:var(--lavender);letter-spacing:.04em;line-height:1.1;opacity:0;animation:fadeUp 1.4s .2s cubic-bezier(.16,1,.3,1) forwards}
+.c-hero .c-sub{font-family:'Cinzel',serif;font-size:clamp(0.68rem,1.36vw,0.93rem);letter-spacing:0.65em;color:var(--acid);opacity:0;margin-top:14px;animation:fadeUp 1.4s .6s cubic-bezier(.16,1,.3,1) forwards}
+.c-hero .c-loc{font-size:9px;color:var(--acid);opacity:.4;margin-top:18px;letter-spacing:.1em}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+
+/* ── CALC BODY ──────────────────────────────────────────── */
+.c-body{max-width:820px;margin:0 auto;padding:20px 40px 120px}
+
+/* ── STEP BLOCK ─────────────────────────────────────────── */
+.step{margin-bottom:48px;opacity:0;transform:translateY(8px);transition:opacity 1.2s ease,transform 1.2s ease}
+.step.vis{opacity:1;transform:none}
+.step-header{display:flex;align-items:baseline;gap:16px;margin-bottom:16px;padding-bottom:8px;border-bottom:1px solid rgba(162,184,189,.08)}
+.step-num{font-size:9px;color:var(--acid);opacity:.4;letter-spacing:.2em;flex-shrink:0}
+.step-title{font-family:'Cinzel',serif;font-size:10px;letter-spacing:.35em;color:var(--lavender);opacity:.7}
+.step-method{font-size:8px;color:var(--amber);opacity:.5;letter-spacing:.1em;margin-left:auto}
+
+.row{display:flex;align-items:baseline;gap:12px;padding:5px 0;border-bottom:1px solid rgba(162,184,189,.04)}
+.row:last-child{border-bottom:none}
+.row-label{font-size:8px;color:var(--lavender);opacity:.4;letter-spacing:.08em;min-width:200px;flex-shrink:0}
+.row-value{font-size:11px;color:var(--acid);letter-spacing:.06em}
+.row-value.hi{color:#fff;opacity:.9}
+.row-note{font-size:7px;color:var(--lavender);opacity:.25;letter-spacing:.06em;margin-left:auto}
+
+/* ── STAR TABLE ─────────────────────────────────────────── */
+.star-table{width:100%;border-collapse:collapse;margin-top:8px}
+.star-table th{font-family:'Cinzel',serif;font-size:7px;letter-spacing:.25em;color:var(--lavender);opacity:.3;padding:6px 10px;text-align:left;border-bottom:1px solid rgba(162,184,189,.08)}
+.star-table td{font-size:9px;color:var(--acid);letter-spacing:.05em;padding:7px 10px;border-bottom:1px solid rgba(162,184,189,.04)}
+.star-table tr:last-child td{border-bottom:none}
+.star-table .name-col{font-family:'Cinzel',serif;font-size:8px;color:var(--lavender);opacity:.7;letter-spacing:.2em}
+.star-table .hi{color:#fff;opacity:.85}
+.star-table .dim{opacity:.35}
+.tag{display:inline-block;font-size:7px;padding:1px 5px;border:1px solid rgba(162,184,189,.2);color:var(--acid);letter-spacing:.1em;margin-left:6px}
+.tag.rising{border-color:rgba(162,184,189,.5);color:var(--acid)}
+.tag.zenith{border-color:rgba(48,136,176,.6);color:var(--amber)}
+.tag.setting{border-color:rgba(162,184,189,.3);color:var(--lavender);opacity:.6}
+
+/* ── PAIRS ──────────────────────────────────────────────── */
+.pairs-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:4px;margin-top:8px}
+.pair-row{font-size:8px;color:var(--lavender);opacity:.35;padding:4px 8px;display:flex;justify-content:space-between;border:1px solid transparent}
+.pair-row.best{opacity:1;color:var(--acid);border-color:rgba(162,184,189,.2);background:rgba(162,184,189,.03)}
+.pair-val{color:var(--acid);opacity:.7}
+.pair-row.best .pair-val{color:#fff;opacity:.9}
+
+/* ── HARMONIC RESULT ────────────────────────────────────── */
+.harmonic-result{margin-top:16px;padding:20px 24px;border:1px solid rgba(162,184,189,.15);background:rgba(162,184,189,.02)}
+.harmonic-result .h-label{font-family:'Cinzel',serif;font-size:8px;letter-spacing:.3em;color:var(--lavender);opacity:.4;margin-bottom:10px}
+.harmonic-result .h-main{font-size:13px;color:var(--acid);letter-spacing:.08em;margin-bottom:6px}
+.harmonic-result .h-detail{font-size:8px;color:var(--lavender);opacity:.45;letter-spacing:.08em;line-height:2}
+
+/* ── FOOTER ─────────────────────────────────────────────── */
+footer{padding:60px 40px;max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;border-top:1px solid rgba(72,208,242,0.2);gap:24px;flex-wrap:wrap}
+.cmono{font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--acid);opacity:.4;letter-spacing:.1em;line-height:1.8}
+.ctext a{color:var(--lavender);text-decoration:none;opacity:.4;font-family:'Cinzel',serif;font-size:8px;letter-spacing:.4em;transition:opacity .3s}
+.ctext a:hover{opacity:.85}
+
+@media(max-width:768px){
+  #bio-strip,#bio-strip-r{display:none}
+  header{left:0;right:0;padding:0 16px}
+  main{padding-left:0;padding-right:0}
+  .c-hero{padding:60px 20px 24px}
+  .c-hero h1{font-size:clamp(2.6rem,10vw,3.27rem)}
+  .c-body{padding:16px 16px 80px}
+  .row{flex-wrap:wrap;gap:4px}
+  .row-label{min-width:unset;width:100%;font-size:7px}
+  .row-value{font-size:10px}
+  .row-note{display:none}
+  .step-header{flex-wrap:wrap;gap:6px}
+  .step-method{margin-left:0;font-size:7px}
+  .star-table{font-size:7px}
+  .star-table th{font-size:6px;padding:4px 5px}
+  .star-table td{padding:5px 5px}
+  .pairs-grid{grid-template-columns:1fr}
+  .harmonic-result{padding:14px 16px}
+  .hnav{gap:14px}
+  .hnav-link{font-size:7px;letter-spacing:.25em}
+  footer{padding:32px 20px;flex-direction:column;gap:16px}}
+</style>
+</head>
+<body>
+
+<div id="cd"></div>
+<div id="cr"></div>
+<div id="bio-strip">
+  <a href="index.html" class="strip-label" style="margin-top:24px;">XULARREIS</a>
+  <a href="process.html" class="strip-label" style="margin-top:24px;">PROCESS</a>
+  <span class="strip-label" style="margin-top:24px;color:var(--acid);opacity:1;">CALCULATION</span>
+</div>
+
+<div id="bio-strip-r"></div>
+
+<header>
+  <a href="index.html" class="wordmark">Xularreis</a>
+  <nav class="hnav">
+    <a href="process.html" class="hnav-link">PROCESS</a>
+    <a href="calculation.html" class="hnav-link active">CALCULATION</a>
+  </nav>
+</header>
+
+<main>
+<div class="c-hero">
+  <h1>Calculation</h1>
+  <div class="c-sub">LIVE COMPUTATION</div>
+  <div class="c-loc" id="loc-line">ACQUIRING POSITION…</div>
+</div>
+
+<div class="c-body">
+
+  <!-- STEP 1: TIME -->
+  <div class="step" data-r>
+    <div class="step-header">
+      <span class="step-num">STEP 01</span>
+      <span class="step-title">CIVIL TIME → JULIAN DATE</span>
+      <span class="step-method">CONTINUOUS DAY COUNT · J4713BC</span>
+    </div>
+    <div class="row"><span class="row-label">UTC TIME</span><span class="row-value hi" id="s-utc">—</span></div>
+    <div class="row"><span class="row-label">UNIX TIMESTAMP (ms)</span><span class="row-value" id="s-unix">—</span><span class="row-note">Date.getTime()</span></div>
+    <div class="row"><span class="row-label">JULIAN DATE</span><span class="row-value hi" id="s-jd">—</span><span class="row-note">unix/86400000 + 2440587.5</span></div>
+    <div class="row"><span class="row-label">T (Julian centuries from J2000.0)</span><span class="row-value" id="s-t">—</span><span class="row-note">(JD − 2451545.0) / 36525</span></div>
+  </div>
+
+  <!-- STEP 2: GMST -->
+  <div class="step" data-r>
+    <div class="step-header">
+      <span class="step-num">STEP 02</span>
+      <span class="step-title">GREENWICH MEAN SIDEREAL TIME</span>
+      <span class="step-method">IAU 1982 POLYNOMIAL</span>
+    </div>
+    <div class="row"><span class="row-label">GMST (raw degrees)</span><span class="row-value" id="s-gmst-raw">—</span><span class="row-note">280.46061837 + 360.98564736629·(JD−J2000) + …</span></div>
+    <div class="row"><span class="row-label">GMST (normalized 0–360°)</span><span class="row-value hi" id="s-gmst">—</span></div>
+    <div class="row"><span class="row-label">GMST (hours)</span><span class="row-value" id="s-gmst-h">—</span></div>
+  </div>
+
+  <!-- STEP 3: NUTATION -->
+  <div class="step" data-r>
+    <div class="step-header">
+      <span class="step-num">STEP 03</span>
+      <span class="step-title">NUTATION CORRECTION</span>
+      <span class="step-method">4-TERM TRIGONOMETRIC · IAU 1980</span>
+    </div>
+    <div class="row"><span class="row-label">Ω (lunar ascending node)</span><span class="row-value" id="s-om">—</span><span class="row-note">125.04452 − 1934.136261·T</span></div>
+    <div class="row"><span class="row-label">L₀ (mean solar longitude)</span><span class="row-value" id="s-l0">—</span></div>
+    <div class="row"><span class="row-label">L₁ (mean lunar longitude)</span><span class="row-value" id="s-l1">—</span></div>
+    <div class="row"><span class="row-label">ε₀ (mean obliquity)</span><span class="row-value" id="s-eps0">—</span><span class="row-note">23.439291111 − 0.013004167·T</span></div>
+    <div class="row"><span class="row-label">ΔΨ (nutation in longitude)</span><span class="row-value" id="s-dpsi">—</span><span class="row-note">arcsec</span></div>
+    <div class="row"><span class="row-label">Δε (nutation in obliquity)</span><span class="row-value" id="s-deps">—</span><span class="row-note">arcsec</span></div>
+    <div class="row"><span class="row-label">ε (true obliquity)</span><span class="row-value" id="s-eps">—</span></div>
+    <div class="row"><span class="row-label">Equation of equinoxes</span><span class="row-value" id="s-eqeq">—</span><span class="row-note">ΔΨ · cos(ε)</span></div>
+  </div>
+
+  <!-- STEP 4: GAST / LAST -->
+  <div class="step" data-r>
+    <div class="step-header">
+      <span class="step-num">STEP 04</span>
+      <span class="step-title">APPARENT SIDEREAL TIME</span>
+      <span class="step-method">GAST → LAST</span>
+    </div>
+    <div class="row"><span class="row-label">GAST (Greenwich apparent)</span><span class="row-value" id="s-gast">—</span></div>
+    <div class="row"><span class="row-label">OBSERVER LONGITUDE</span><span class="row-value" id="s-lon">—</span></div>
+    <div class="row"><span class="row-label">LAST (local apparent)</span><span class="row-value hi" id="s-last">—</span><span class="row-note">GAST + longitude</span></div>
+    <div class="row"><span class="row-label">LAST (hours)</span><span class="row-value" id="s-last-h">—</span></div>
+  </div>
+
+  <!-- STEP 5: STAR POSITIONS -->
+  <div class="step" data-r>
+    <div class="step-header">
+      <span class="step-num">STEP 05</span>
+      <span class="step-title">NINE WITNESSES — LOCAL COORDINATES</span>
+      <span class="step-method">SPHERICAL TRIGONOMETRY · BENNETT REFRACTION</span>
+    </div>
+    <table class="star-table" id="star-table">
+      <thead>
+        <tr>
+          <th>STAR</th>
+          <th>RA (h)</th>
+          <th>DEC (°)</th>
+          <th>HA (h)</th>
+          <th>ALT (°)</th>
+          <th>AZ (°)</th>
+          <th>REF (′)</th>
+          <th>STATUS</th>
+        </tr>
+      </thead>
+      <tbody id="star-tbody"></tbody>
+    </table>
+  </div>
+
+  <!-- STEP 6: PHI HARMONIC -->
+  <div class="step" data-r>
+    <div class="step-header">
+      <span class="step-num">STEP 06</span>
+      <span class="step-title">PHI HARMONIC — 36 PAIRS</span>
+      <span class="step-method">PENTAGON NORMALIZATION · 108°</span>
+    </div>
+    <div class="pairs-grid" id="pairs-grid"></div>
+    <div class="harmonic-result" id="harmonic-result">
+      <div class="h-label">DOMINANT HARMONIC</div>
+      <div class="h-main" id="h-main">—</div>
+      <div class="h-detail" id="h-detail">—</div>
+    </div>
+  </div>
+
+  <!-- STEP 7: TRANSIT CLASSIFICATION -->
+  <div class="step" data-r>
+    <div class="step-header">
+      <span class="step-num">STEP 07</span>
+      <span class="step-title">TRANSIT CLASSIFICATION</span>
+      <span class="step-method">HOUR ANGLE WINDOWS · HONEST NULLS</span>
+    </div>
+    <div class="row"><span class="row-label">RISING (HA 18–24h, alt > −2°)</span><span class="row-value hi" id="t-rising">—</span></div>
+    <div class="row"><span class="row-label">ZENITH (highest visible)</span><span class="row-value hi" id="t-zenith">—</span></div>
+    <div class="row"><span class="row-label">SETTING (HA 0–6h, alt > −2°)</span><span class="row-value hi" id="t-setting">—</span></div>
+    <div class="row" style="margin-top:12px"><span class="row-label">OBSERVER LATITUDE</span><span class="row-value" id="t-lat">—</span></div>
+    <div class="row"><span class="row-label">VISIBLE STARS (alt > 0°)</span><span class="row-value" id="t-visible">—</span></div>
+  </div>
+
+</div>
+</main>
+
+<footer>
+  <div class="cmono">XULARREIS · CALCULATION<br>LIVE · EVERY SECOND</div>
+  <div class="ctext"><a href="index.html">RETURN</a></div>
+  <div class="cmono" style="text-align:right">ENGINE · UNCHANGED · V1–V9<br>EPOCH · J2000.0 · PAIRS · 36</div>
+</footer>
+
+<script>
+// ── CURSOR ───────────────────────────────────────────────
+const CD = document.getElementById('cd');
+const CR = document.getElementById('cr');
+let cx = innerWidth/2, cy = innerHeight/2, rx = cx, ry = cy;
+document.addEventListener('mousemove', e => { cx = e.clientX; cy = e.clientY; CD.style.left = cx+'px'; CD.style.top = cy+'px'; });
+(function tick(){ rx += (cx-rx)*.12; ry += (cy-ry)*.12; CR.style.left = rx+'px'; CR.style.top = ry+'px'; requestAnimationFrame(tick); })();
+
+// ── SCROLL REVEAL ────────────────────────────────────────
+const ro = new IntersectionObserver(es => es.forEach(e => { if(e.isIntersecting){ e.target.classList.add('vis'); ro.unobserve(e.target); }}), {threshold:.08});
+document.querySelectorAll('[data-r]').forEach(el => ro.observe(el));
+
+// ── CONSTANTS ────────────────────────────────────────────
+const DEG = Math.PI / 180;
+const PHI = (1 + Math.sqrt(5)) / 2;
+const PENTAGON = 108.0;
+const PHI_SERIES = [
+  { v: 1/PHI/PHI, l: '1/Φ²' }, { v: 1/PHI, l: '1/Φ' }, { v: 1, l: 'Φ⁰' },
+  { v: PHI, l: 'Φ' }, { v: PHI*PHI, l: 'Φ²' }, { v: PHI*PHI*PHI, l: 'Φ³' },
+  { v: 1.5, l: 'P·Fifth' }, { v: 4/3, l: 'P·Fourth' }, { v: 5/4, l: 'M·Third' },
+  { v: 2.4815, l: 'Kepler J/S' },
+];
+const STARS = [
+  {name:'Sirius',    ra:6.7525,  dec:-16.7161},
+  {name:'Canopus',   ra:6.3992,  dec:-52.6957},
+  {name:'Arcturus',  ra:14.2611, dec:19.1822},
+  {name:'Vega',      ra:18.6157, dec:38.7837},
+  {name:'Capella',   ra:5.2781,  dec:45.9980},
+  {name:'Rigel',     ra:5.2423,  dec:-8.2017},
+  {name:'Procyon',   ra:7.6550,  dec:5.2250},
+  {name:'Achernar',  ra:1.6285,  dec:-57.2367},
+  {name:'Betelgeuse',ra:5.9195,  dec:7.4070},
+  {name:'Aldebaran', ra:4.5987,  dec:16.5092},
+  {name:'Spica',     ra:13.4199, dec:-11.1614},
+  {name:'Antares',   ra:16.4901, dec:-26.4319},
+  {name:'Fomalhaut', ra:22.9608, dec:-29.6223},
+  {name:'Regulus',   ra:10.1395, dec:11.9672},
+  {name:'Menkent',   ra:14.1114, dec:-36.3700},
+];
+
+// Use only the 9 witnesses (same as engine)
+const NINE = [
+  {name:'Sirius',    ra:6.7525,  dec:-16.7161},
+  {name:'Vega',      ra:18.6157, dec:38.7837},
+  {name:'Arcturus',  ra:14.2611, dec:19.1822},
+  {name:'Aldebaran', ra:4.5987,  dec:16.5092},
+  {name:'Antares',   ra:16.4901, dec:-26.4319},
+  {name:'Fomalhaut', ra:22.9608, dec:-29.6223},
+  {name:'Regulus',   ra:10.1395, dec:11.9672},
+  {name:'Menkent',   ra:14.1114, dec:-36.3700},
+  {name:'Spica',     ra:13.4199, dec:-11.1614},
+];
+
+// ── COMPUTATION ──────────────────────────────────────────
+function getJD(date){ return date.getTime()/86400000 + 2440587.5; }
+
+function computeAll(lat, lon) {
+  const now = new Date();
+  const unix = now.getTime();
+  const JD = getJD(now);
+  const T = (JD - 2451545.0) / 36525.0;
+
+  // GMST
+  let gmst_raw = 280.46061837 + 360.98564736629*(JD-2451545.0) + 0.000387933*T*T - T*T*T/38710000.0;
+  let gmst = ((gmst_raw % 360) + 360) % 360;
+
+  // Nutation
+  const Om  = (125.04452 - 1934.136261*T);
+  const L0  = (280.4664567 + 360007.6982779*T);
+  const L1  = (218.3165317 + 481267.8813*T);
+  const eps0 = 23.439291111 - 0.013004167*T;
+  const dPsi_as = -17.20*Math.sin(Om*DEG) - 1.32*Math.sin(2*L0*DEG) - 0.23*Math.sin(2*L1*DEG) + 0.21*Math.sin(2*Om*DEG);
+  const dEps_as =   9.20*Math.cos(Om*DEG) + 0.57*Math.cos(2*L0*DEG) + 0.10*Math.cos(2*L1*DEG) - 0.09*Math.cos(2*Om*DEG);
+  const dPsi = dPsi_as/3600;
+  const dEps = dEps_as/3600;
+  const eps  = eps0 + dEps;
+  const eqeq = dPsi * Math.cos(eps*DEG);
+
+  // GAST / LAST
+  const gast = ((gmst + eqeq) % 360 + 360) % 360;
+  const last = ((gast + lon) % 360 + 360) % 360;
+
+  // Star positions
+  const positions = NINE.map(s => {
+    const ha  = ((last - s.ra*15) % 360 + 360) % 360;
+    const H   = ha*DEG, d = s.dec*DEG, L = lat*DEG;
+    const sinAlt = Math.sin(d)*Math.sin(L) + Math.cos(d)*Math.cos(L)*Math.cos(H);
+    const alt_raw = Math.asin(Math.max(-1,Math.min(1,sinAlt)))/DEG;
+    const cosAz = (Math.sin(d) - Math.sin(alt_raw*DEG)*Math.sin(L))/(Math.cos(alt_raw*DEG)*Math.cos(L));
+    let az = Math.acos(Math.max(-1,Math.min(1,cosAz)))/DEG;
+    if(Math.sin(H)>0) az = 360-az;
+    let ref = 0;
+    if(alt_raw > -1){ const term = alt_raw + 10.3/(alt_raw+5.11); ref = 1.02/(Math.tan(term*DEG)*60); ref = Math.min(ref,0.6); }
+    return { ...s, ha: ha/15, alt: alt_raw+ref, alt_raw, az, ref_arcmin: ref*60 };
+  });
+
+  // Transits
+  const visible = positions.filter(s=>s.alt>0);
+  const zenith = visible.length ? visible.reduce((a,b)=>a.alt>b.alt?a:b) : null;
+  const risingC = positions.filter(s=>s.ha>=18&&s.ha<=24&&s.alt>-2&&s.alt<22);
+  const rising = risingC.length ? risingC.reduce((a,b)=>Math.abs(a.alt)<Math.abs(b.alt)?a:b) : null;
+  const settingC = positions.filter(s=>s.ha>=0&&s.ha<=6&&s.alt>-2&&s.alt<22);
+  const setting = settingC.length ? settingC.reduce((a,b)=>Math.abs(a.alt)<Math.abs(b.alt)?a:b) : null;
+
+  // Pairs
+  const accessible = positions.filter(s=>s.alt>-5);
+  const pairs = [];
+  let best = null, bestDelta = Infinity;
+  for(let i=0;i<accessible.length;i++){
+    for(let j=i+1;j<accessible.length;j++){
+      const s1=accessible[i],s2=accessible[j];
+      const r1=s1.ra*15*DEG,r2=s2.ra*15*DEG,d1=s1.dec*DEG,d2=s2.dec*DEG;
+      const c=Math.sin(d1)*Math.sin(d2)+Math.cos(d1)*Math.cos(d2)*Math.cos(r1-r2);
+      const sep=Math.acos(Math.max(-1,Math.min(1,c)))/DEG;
+      if(sep<1) continue;
+      const norm=sep/PENTAGON;
+      let bestLocal=null,bestLocalD=Infinity;
+      for(const r of PHI_SERIES){ const d=Math.abs(norm-r.v)/r.v; if(d<bestLocalD){bestLocalD=d;bestLocal=r;} }
+      const entry={a:s1.name,b:s2.name,sep,norm,ratio:bestLocal.l,delta:bestLocalD};
+      pairs.push(entry);
+      if(bestLocalD<bestDelta){bestDelta=bestLocalD;best={...entry,label:bestLocal.l,pair:[s1.name,s2.name],value:bestLocal.v};}
+    }
+  }
+
+  return {now,unix,JD,T,gmst_raw,gmst,Om,L0,L1,eps0,dPsi_as,dEps_as,dPsi,dEps,eps,eqeq,gast,last,lon,lat,positions,zenith,rising,setting,visible,pairs,best};
+}
+
+function fmt(n,d=6){ return (typeof n==='number') ? n.toFixed(d) : '—'; }
+
+function render(d){
+  // Step 1
+  set('s-utc', d.now.toUTCString());
+  set('s-unix', d.unix.toLocaleString());
+  set('s-jd', fmt(d.JD,8));
+  set('s-t', fmt(d.T,10));
+  // Step 2
+  set('s-gmst-raw', fmt(d.gmst_raw,6)+'°');
+  set('s-gmst', fmt(d.gmst,6)+'°');
+  set('s-gmst-h', fmt(d.gmst/15,6)+'h');
+  // Step 3
+  set('s-om',   fmt(d.Om,4)+'°');
+  set('s-l0',   fmt(((d.L0%360)+360)%360,4)+'°');
+  set('s-l1',   fmt(((d.L1%360)+360)%360,4)+'°');
+  set('s-eps0', fmt(d.eps0,6)+'°');
+  set('s-dpsi', fmt(d.dPsi_as,4)+'"');
+  set('s-deps', fmt(d.dEps_as,4)+'"');
+  set('s-eps',  fmt(d.eps,6)+'°');
+  set('s-eqeq', fmt(d.eqeq,6)+'°');
+  // Step 4
+  set('s-gast', fmt(d.gast,6)+'°');
+  set('s-lon',  fmt(d.lon,6)+'°');
+  set('s-last', fmt(d.last,6)+'°');
+  set('s-last-h', fmt(d.last/15,6)+'h');
+  // Step 5 — star table
+  const tbody = document.getElementById('star-tbody');
+  tbody.innerHTML = '';
+  d.positions.forEach(s => {
+    const isR = d.rising && d.rising.name===s.name;
+    const isZ = d.zenith && d.zenith.name===s.name;
+    const isS = d.setting && d.setting.name===s.name;
+    const tag = isR?'<span class="tag rising">RISING</span>':isZ?'<span class="tag zenith">ZENITH</span>':isS?'<span class="tag setting">SETTING</span>':'';
+    const dim = s.alt < 0 ? ' dim' : '';
+    tbody.innerHTML += `<tr>
+      <td class="name-col${dim}">${s.name}${tag}</td>
+      <td class="${dim}">${fmt(s.ra,4)}</td>
+      <td class="${dim}">${fmt(s.dec,4)}</td>
+      <td class="${dim}">${fmt(s.ha,4)}</td>
+      <td class="${s.alt>0?'hi':dim}">${fmt(s.alt,2)}</td>
+      <td class="${dim}">${fmt(s.az,2)}</td>
+      <td class="${dim}">${fmt(s.ref_arcmin,2)}</td>
+      <td class="${dim}">${s.alt>0?'VISIBLE':'BELOW'}</td>
+    </tr>`;
+  });
+  // Step 6 — pairs
+  const pg = document.getElementById('pairs-grid');
+  pg.innerHTML = '';
+  const sorted = [...d.pairs].sort((a,b)=>a.delta-b.delta);
+  sorted.forEach(p => {
+    const isBest = d.best && p.a===d.best.pair[0] && p.b===d.best.pair[1];
+    pg.innerHTML += `<div class="pair-row${isBest?' best':''}">
+      <span>${p.a} / ${p.b}</span>
+      <span class="pair-val">${p.ratio} · Δ${(p.delta*100).toFixed(2)}%</span>
+    </div>`;
+  });
+  if(d.best){
+    set('h-main', `${d.best.pair[0]} / ${d.best.pair[1]} · ${d.best.label}`);
+    set('h-detail',
+      `SEPARATION: ${fmt(d.best.sep,4)}°  ·  NORM/108°: ${fmt(d.best.sep/108,6)}\n` +
+      `RATIO VALUE: ${fmt(d.best.value,6)}  ·  Δ: ${(d.best.delta*100).toFixed(4)}%  ·  ${d.best.delta<0.005?'EXACT HARMONIC':'NEAR HARMONIC'}`
+    );
+  }
+  // Step 7
+  set('t-rising',  d.rising  ? `${d.rising.name} · ${fmt(d.rising.alt,2)}° · AZ ${fmt(d.rising.az,1)}°`  : 'UNOCCUPIED');
+  set('t-zenith',  d.zenith  ? `${d.zenith.name} · ${fmt(d.zenith.alt,2)}° · AZ ${fmt(d.zenith.az,1)}°`  : 'UNOCCUPIED');
+  set('t-setting', d.setting ? `${d.setting.name} · ${fmt(d.setting.alt,2)}° · AZ ${fmt(d.setting.az,1)}°` : 'UNOCCUPIED');
+  set('t-lat', fmt(d.lat,6)+'°');
+  set('t-visible', d.visible.length + ' / 9  ·  ' + d.visible.map(s=>s.name).join(', '));
+}
+
+function set(id,val){ const el=document.getElementById(id); if(el) el.textContent=val; }
+
+// ── GEOLOCATION & LOOP ───────────────────────────────────
+let lat = 51.5074, lon = -0.1278; // default London
+let located = false;
+
+function startLoop(){
+  function tick(){
+    try{ render(computeAll(lat,lon)); } catch(e){ console.error(e); }
+    setTimeout(tick, 1000);
+  }
+  tick();
+}
+
+if(navigator.geolocation){
+  navigator.geolocation.getCurrentPosition(
+    pos => {
+      lat = pos.coords.latitude;
+      lon = pos.coords.longitude;
+      located = true;
+      document.getElementById('loc-line').textContent =
+        `${lat.toFixed(4)}°N  ${lon.toFixed(4)}°  ·  POSITION LOCKED`;
+      startLoop();
+    },
+    () => {
+      document.getElementById('loc-line').textContent = 'POSITION UNAVAILABLE · DEFAULT: 51.5074°N 0.1278°W';
+      startLoop();
+    },
+    {timeout:8000}
+  );
+} else {
+  startLoop();
+}
+</script>
+</body>
+</html>
